@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hcm-ai-local-storage
+  # namespace: maas-config
+spec:
+  destination:
+    name: in-cluster
+  project: default
+  source:
+    path: operators/local-storage/overlays/stable
+    repoURL: 'https://github.com/app-sre/hcm-ai-playground'
+    targetRevision: main
+  syncPolicy:
+    prune: false
