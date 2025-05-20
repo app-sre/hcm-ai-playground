@@ -7,3 +7,4 @@ resources:
   - ./mistral-small
   - ./llama-scout
   - namespace.yaml
+  - clusterrole.yaml
