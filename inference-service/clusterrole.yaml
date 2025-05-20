@@ -1,0 +1,15 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: inference-service-access
+  labels:
+    opendatahub.io/dashboard: 'true'
+rules:
+  - verbs:
+      - list
+      - get
+      - watch
+    apiGroups:
+      - serving.kserve.io
+    resources:
+      - inferenceservices
