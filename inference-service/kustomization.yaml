@@ -8,3 +8,4 @@ resources:
   - ./llama-scout
   - namespace.yaml
   - clusterrole.yaml
+  - role.yaml
