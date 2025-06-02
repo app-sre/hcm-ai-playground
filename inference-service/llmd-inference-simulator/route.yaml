@@ -1,0 +1,14 @@
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: inference-simulator-maas-route
+  namespace: maas
+spec:
+  to:
+    kind: Service
+    name: inference-simulator-maas
+  port:
+    targetPort: 80
+  tls:
+    termination: edge

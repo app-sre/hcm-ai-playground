@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inference-simulator-maas
+  namespace: maas
+spec:
+  selector:
+    app: inference-simulator-maas
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
