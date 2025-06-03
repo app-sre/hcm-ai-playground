@@ -9,6 +9,6 @@ spec:
     kind: Service
     name: inference-simulator-maas
   port:
-    targetPort: 80
+    targetPort: 8080
   tls:
     termination: edge
