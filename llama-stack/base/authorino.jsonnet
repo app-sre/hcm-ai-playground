@@ -30,11 +30,7 @@ function (
                 "priority": 0
             },
             "sso": {
-                "credentials": {
-                    "authorizationHeader": {
-                        "prefix": "APIKEY"
-                    }
-                },
+                "credentials": {},
                 "jwt": {
                     "issuerUrl": "https://sso.redhat.com/auth/realms/redhat-external"
                 },
