@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: llama-stack-server
+  namespace: maas
+spec:
+  selector:
+    app: llama-stack-server
+  ports:
+    - protocol: TCP
+      port: 8321
+      name: web
