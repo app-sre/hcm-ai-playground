@@ -65,7 +65,7 @@ function (
                     "patterns": [
                         {
                             "operator": "eq",
-                            "selector": "auth.is_internal",
+                            "selector": "auth.identity.is_internal",
                             "value": true
                         }
                     ]
