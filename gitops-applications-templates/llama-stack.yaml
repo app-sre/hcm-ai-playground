@@ -21,6 +21,8 @@ objects:
           tlas:
           - name: hostname
             value: ${HOST_NAME}
+          - name: vllm
+            value: ${VLLM}
         exclude: kustomization.yaml
     syncPolicy:
       automated:
@@ -29,4 +31,6 @@ objects:
       prune: false
 parameters:
 - name: HOST_NAME
+  required: true
+- name: VLLM
   required: true
