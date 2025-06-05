@@ -66,7 +66,7 @@ function (
                         {
                             "operator": "eq",
                             "selector": "auth.identity.is_internal",
-                            "value": true
+                            "value": "true"
                         }
                     ]
                 },
