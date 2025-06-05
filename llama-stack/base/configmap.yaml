@@ -21,7 +21,7 @@ data:
             - endpoint:
                 address:
                   socket_address:
-                    address: authorino-authorino-authorization.redhat-ods-applications-auth-provider.svc.cluster.local
+                    address: authorino-authorino-authorization
                     port_value: 50051
       - name: envoy-llama-stack
         connect_timeout: 0.25s
