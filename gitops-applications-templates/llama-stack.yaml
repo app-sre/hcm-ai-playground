@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: llama-stack
+objects:
+- apiVersion: argoproj.io/v1alpha1
+  kind: Application
+  metadata:
+    name: hcm-ai-llama-stack
+    namespace: maas-config
+  spec:
+    destination:
+      name: in-cluster
+    project: default
+    source:
+      path: llama-stack/base
+      repoURL: 'https://github.com/app-sre/hcm-ai-playground'
+      targetRevision: main
+      directory:
+        jsonnet:
+          tlas:
+          - name: hostname
+            value: ${HOST_NAME}
+        exclude: kustomization.yaml
+    syncPolicy:
+      automated:
+        selfHeal: true
+        allowEmpty: false
+      prune: false
+parameters:
+- name: HOST_NAME
+  required: true
