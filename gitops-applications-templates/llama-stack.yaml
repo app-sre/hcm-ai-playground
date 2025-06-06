@@ -21,6 +21,8 @@ objects:
           tlas:
           - name: hostname
             value: ${HOST_NAME}
+          - name: mcp_hostname
+            value: ${MCP_HOST_NAME}
           - name: vllm
             value: ${VLLM}
         exclude: kustomization.yaml
@@ -31,6 +33,8 @@ objects:
       prune: false
 parameters:
 - name: HOST_NAME
+  required: true
+- name: MCP_HOST_NAME
   required: true
 - name: VLLM
   required: true

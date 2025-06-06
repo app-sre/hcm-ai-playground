@@ -8,7 +8,7 @@ function (
     "apiVersion": "authorino.kuadrant.io/v1beta3",
     "kind": "AuthConfig",
     "metadata": {
-        "name": "envoy-llama-stack",
+        "name": "envoy-mcp",
         "namespace": "llama-stack"
     },
     "spec": {
@@ -81,7 +81,7 @@ function (
                 ]
             }
         },
-        "hosts": [ hostname ],
+        "hosts": [ mcp_hostname ],
         "response": {
             "unauthorized": {
                 "message": {

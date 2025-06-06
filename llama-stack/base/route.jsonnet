@@ -1,5 +1,6 @@
 function (
     hostname="unused",
+    mcp_hostname="unused",
     vllm="unused",
 )
 [
