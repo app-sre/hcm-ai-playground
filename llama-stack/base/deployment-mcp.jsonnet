@@ -57,7 +57,7 @@ function (
                         ],
                         "imagePullPolicy": "IfNotPresent",
                         "terminationMessagePolicy": "FallbackToLogsOnError",
-                        "image": "quay.io/psav/mcp:01"
+                        "image": "quay.io/psav/mcp:02"
                     }
                 ],
                 "serviceAccount": "default"
