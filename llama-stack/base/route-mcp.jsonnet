@@ -1,5 +1,6 @@
 function (
     hostname="unused",
+    mcp_hostname="unused",
     vllm="unused",
 )
 [
@@ -11,7 +12,7 @@ function (
         "namespace": "llama-stack"
     },
     "spec": {
-        "host": hostname,
+        "host": mcp_hostname,
         "path": "/",
         "to": {
             "kind": "Service",
