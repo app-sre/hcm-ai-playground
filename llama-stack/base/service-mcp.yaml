@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-server
+  namespace: llama-stack
+spec:
+  selector:
+    app: mcp-server
+  ports:
+    - protocol: TCP
+      port: 5000
+      name: web
