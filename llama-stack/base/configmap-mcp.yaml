@@ -1,0 +1,111 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: envoy-mcp
+  name: envoy-mcp
+  namespace: llama-stack
+data:
+  envoy.yaml: |
+    static_resources:
+      clusters:
+      - name: authorino
+        connect_timeout: 0.25s
+        type: STRICT_DNS
+        lb_policy: ROUND_ROBIN
+        http2_protocol_options: {}
+        load_assignment:
+          cluster_name: authorino
+          endpoints:
+          - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: authorino-authorino-authorization
+                    port_value: 50051
+      - name: envoy-mcp
+        connect_timeout: 0.25s
+        type: STRICT_DNS
+        lb_policy: ROUND_ROBIN
+        load_assignment:
+          cluster_name: envoy-mcp
+          endpoints:
+          - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: mcp-server
+                    port_value: 5000
+      listeners:
+      - address:
+          socket_address:
+            address: 0.0.0.0
+            port_value: 8000
+        filter_chains:
+        - filters:
+          - name: envoy.http_connection_manager
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+              stat_prefix: local
+              use_remote_address: true
+              route_config:
+                name: local_route
+                virtual_hosts:
+                - name: local_service
+                  domains: ['*']
+                  routes:
+                  - match: { prefix: / }
+                    route:
+                      cluster: envoy-mcp
+                  rate_limits:
+                  - actions:
+                      - metadata:
+                          metadata_key:
+                            key: "envoy.filters.http.ext_authz"
+                            path:
+                            - key: ext_auth_data
+                            - key: username
+                          descriptor_key: user_id
+              http_filters:
+              - name: envoy.filters.http.ext_authz
+                typed_config:
+                  "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
+                  transport_api_version: V3
+                  failure_mode_allow: false
+                  include_peer_certificate: true
+                  grpc_service:
+                    envoy_grpc:
+                      cluster_name: authorino
+                    timeout: 1s
+              - name: envoy.filters.http.ratelimit
+                typed_config:
+                  "@type": type.googleapis.com/envoy.extensions.filters.http.ratelimit.v3.RateLimit
+                  domain: "talker-api"
+                  failure_mode_deny: false
+                  timeout: 3s
+                  rate_limit_service:
+                    transport_api_version: V3
+                    grpc_service:
+                      envoy_grpc:
+                        cluster_name: limitador
+              - name: envoy.filters.http.router
+                typed_config:
+                  "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+
+              # # Uncomment to enable tracing
+              # tracing:
+              #   provider:
+              #     name: envoy.tracers.opentelemetry
+              #     typed_config:
+              #       "@type": type.googleapis.com/envoy.config.trace.v3.OpenTelemetryConfig
+              #       grpc_service:
+              #         envoy_grpc:
+              #           cluster_name: opentelemetry
+              #         timeout: 1s
+              #       service_name: envoy
+    admin:
+      access_log_path: "/tmp/admin_access.log"
+      address:
+        socket_address:
+          address: 0.0.0.0
+          port_value: 8001

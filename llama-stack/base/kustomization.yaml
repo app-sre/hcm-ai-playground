@@ -10,3 +10,10 @@ resources:
   - kustomization.yaml
   - route.yaml
   - service.yaml
+  - configmap-mcp.yaml
+  - deployment-mcp.yaml
+  - envoy-deployment-mcp.yaml
+  - envoy-service-mcp.yaml
+  - kustomization.yaml
+  - route-mcp.yaml
+  - service-mcp.yaml
