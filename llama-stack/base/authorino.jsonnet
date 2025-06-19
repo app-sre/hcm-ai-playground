@@ -22,11 +22,7 @@ function (
                         }
                     }
                 },
-                "credentials": {
-                    "authorizationHeader": {
-                        "prefix": "APIKEY"
-                    }
-                },
+                "credentials": {},
                 "metrics": false,
                 "priority": 0
             },
