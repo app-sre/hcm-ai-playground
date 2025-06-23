@@ -5,6 +5,7 @@ metadata:
 rules:
   - apiGroups: 
       - "nfd.openshift.io"
+      - "nfd.k8s-sigs.io"
     resources: 
       - "*"
     verbs: 
