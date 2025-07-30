@@ -7,6 +7,7 @@ resources:
   # - ./mistral-small-dev 
   - ./mistral-small
   - ./llama-scout
+  - ./qwen3-32b
   - namespace.yaml
   - clusterrole.yaml
   - role.yaml
