@@ -41,7 +41,7 @@ spec:
       runtime: qwen3-32b-maas
       storage:
         key: models
-        path: models-maas/models--qwen--Qwen-32B/
+        path: models-maas/models--qwen--Qwen-32B
     tolerations:
       - effect: NoSchedule
         key: nvidia-gpu-only
