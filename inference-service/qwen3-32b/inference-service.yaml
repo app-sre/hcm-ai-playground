@@ -22,7 +22,7 @@ spec:
     model:
       args:
         - '--max-model-len'
-        - '32768'
+        - '262140'
         - '--tensor-parallel-size'
         - '4'
         - '--enable-auto-tool-choice'
