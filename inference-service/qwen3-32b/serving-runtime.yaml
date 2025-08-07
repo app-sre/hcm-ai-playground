@@ -31,7 +31,7 @@ spec:
           value: /tmp/hf_home
         - name: TRANSFORMERS_CACHE
           value: /tmp/transformers_cache
-      image: 'quay.io/vllm/vllm:0.8.3.0rc0'
+      image: 'vllm/vllm-openai:latest'
       name: kserve-container
       ports:
         - containerPort: 8080
