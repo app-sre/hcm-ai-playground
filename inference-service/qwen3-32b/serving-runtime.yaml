@@ -31,7 +31,7 @@ spec:
           value: /tmp/hf_home
         - name: TRANSFORMERS_CACHE
           value: /tmp/transformers_cache
-      image: 'quay.io/modh/vllm:rhoai-2.24-cuda'
+      image: 'quay.io/modh/vllm:rhoai-2.23-cuda'
       name: kserve-container
       ports:
         - containerPort: 8080
