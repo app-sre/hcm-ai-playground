@@ -22,12 +22,10 @@ spec:
     model:
       args:
         - '--max-model-len'
-        - '262140'
+        - '128000'
         - '--tensor-parallel-size'
         - '4'
         - '--enable-auto-tool-choice'
-        - '--tool-call-parser'
-        - 'hermes'
       modelFormat:
         name: vLLM
       name: ''
