@@ -25,7 +25,6 @@ spec:
         - '128000'
         - '--tensor-parallel-size'
         - '4'
-        - '--enable-auto-tool-choice'
       modelFormat:
         name: vLLM
       name: ''
