@@ -2,13 +2,13 @@ apiVersion: serving.kserve.io/v1beta1
 kind: InferenceService
 metadata:
   annotations:
-    openshift.io/display-name: gpt-oss-120b-maas
+    openshift.io/display-name: gpt-oss-20b-maas
     security.opendatahub.io/enable-auth: 'true'
     serving.knative.openshift.io/enablePassthrough: 'true'
     serving.kserve.io/deploymentMode: Serverless
     sidecar.istio.io/inject: 'true'
     sidecar.istio.io/rewriteAppHTTPProbers: 'true'
-  name: gpt-oss-120b-maas
+  name: gpt-oss-20b-maas
   namespace: maas
   finalizers:
     - inferenceservice.finalizers
@@ -23,22 +23,20 @@ spec:
       args:
         - '--max-model-len'
         - '128000'
-        - '--tensor-parallel-size'
-        - '4'
       modelFormat:
         name: vLLM
       name: ''
       resources:
         limits:
-          nvidia.com/gpu: '4'
+          nvidia.com/gpu: '1'
         requests:
           cpu: '4'
-          memory: 32Gi
-          nvidia.com/gpu: '4'
-      runtime: gpt-oss-120b-maas
+          memory: 16Gi
+          nvidia.com/gpu: '1'
+      runtime: gpt-oss-20b-maas
       storage:
         key: models
-        path: models-maas/models--openai--gpt-oss-120b
+        path: models-maas/models--openai--gpt-oss-20b
     tolerations:
       - effect: NoSchedule
         key: nvidia-gpu-only
