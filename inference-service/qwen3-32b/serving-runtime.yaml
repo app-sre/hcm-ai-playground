@@ -7,8 +7,8 @@ metadata:
     opendatahub.io/recommended-accelerators: '["nvidia.com/gpu"]'
     opendatahub.io/template-display-name: vLLM ServingRuntime for KServe
     opendatahub.io/template-name: vllm-runtime
-    openshift.io/display-name: gpt-oss-120b-maas
-  name: gpt-oss-120b-maas
+    openshift.io/display-name: gpt-oss-20b-maas
+  name: gpt-oss-20b-maas
   namespace: maas
   labels:
     opendatahub.io/dashboard: 'true'
@@ -21,7 +21,6 @@ spec:
         - '--port=8080'
         - '--model=/mnt/models'
         - '--served-model-name={{.Name}}'
-        - '--tensor-parallel-size=4'
       command:
         - python
         - '-m'
@@ -46,5 +45,5 @@ spec:
   volumes:
     - emptyDir:
         medium: Memory
-        sizeLimit: 4Gi
+        sizeLimit: 2Gi
       name: shm
