@@ -44,6 +44,6 @@ spec:
       - effect: NoSchedule
         key: nvidia.com/gpu
         operator: Equal
-        value: L4
+        value: H100
     annotations:
       serving.knative.dev/progress-deadline: 30m
