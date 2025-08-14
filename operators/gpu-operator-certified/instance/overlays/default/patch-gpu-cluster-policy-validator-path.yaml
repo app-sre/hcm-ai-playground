@@ -1,0 +1,15 @@
+apiVersion: nvidia.com/v1
+kind: ClusterPolicy
+metadata:
+  name: gpu-cluster-policy
+spec:
+  validator:
+    env:
+      - name: PATH
+        value: '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/run/nvidia/driver/usr/bin'
+    plugin:
+      env:
+        - name: WITH_WORKLOAD
+          value: 'false'
+        - name: PATH
+          value: '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/run/nvidia/driver/usr/bin'
