@@ -6,3 +6,6 @@ resources:
 
 components:
   - ../../components/aws-gpu-machineset
+
+patchesStrategicMerge:
+  - patch-gpu-cluster-policy-validator-path.yaml
