@@ -28,3 +28,7 @@ spec:
       managementState: Removed
     datasciencepipelines:
       managementState: Removed
+    feastoperator:
+      managementState: Removed
+    llamastackoperator:
+      managementState: Removed
