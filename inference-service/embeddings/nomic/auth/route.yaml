@@ -1,0 +1,17 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: envoy-nomic
+spec:
+  host: nomic-route-nomic.apps.rosa.hcmaii01ue1.a9ro.p3.openshiftapps.com
+  path: /
+  to:
+    kind: Service
+    name: envoy-nomic
+    weight: 100
+  port:
+    targetPort: web
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
