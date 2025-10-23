@@ -90,18 +90,6 @@ data:
               - name: envoy.filters.http.router
                 typed_config:
                   "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
-
-              # # Uncomment to enable tracing
-              # tracing:
-              #   provider:
-              #     name: envoy.tracers.opentelemetry
-              #     typed_config:
-              #       "@type": type.googleapis.com/envoy.config.trace.v3.OpenTelemetryConfig
-              #       grpc_service:
-              #         envoy_grpc:
-              #           cluster_name: opentelemetry
-              #         timeout: 1s
-              #       service_name: envoy
     admin:
       access_log_path: "/tmp/admin_access.log"
       address:

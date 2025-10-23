@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sync-sa-token-to-authorino
+  labels:
+    app: nomic-embeddings
+spec:
+  template:
+    spec:
+      serviceAccountName: token-sync-sa
+      restartPolicy: OnFailure
+      containers:
+      - name: sync
+        image: bitnami/kubectl:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          set -e
+          echo "Waiting for ServiceAccount token to be ready..."
+          while ! kubectl get secret nomic-client-token -o jsonpath='{.data.token}' | grep -q .; do
+            echo "Token not ready yet, waiting..."
+            sleep 2
+          done
+          
+          echo "Reading token from ServiceAccount secret..."
+          TOKEN=$(kubectl get secret nomic-client-token -o jsonpath='{.data.token}')
+          
+          echo "Creating Authorino API key secret..."
+          cat <<EOF | kubectl apply -f -
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: nomic-api-key
+            labels:
+              authorino.kuadrant.io/managed-by: authorino
+              group: maas
+          type: Opaque
+          data:
+            api_key: ${TOKEN}
+          EOF
+          
+          echo "Token sync completed successfully!"
+

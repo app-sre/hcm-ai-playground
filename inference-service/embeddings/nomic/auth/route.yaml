@@ -3,7 +3,7 @@ apiVersion: route.openshift.io/v1
 metadata:
   name: envoy-nomic
 spec:
-  host: nomic-route-nomic.apps.rosa.hcmaii01ue1.a9ro.p3.openshiftapps.com
+  host: nomic-route-maas.apps.rosa.hcmaii01ue1.a9ro.p3.openshiftapps.com
   path: /
   to:
     kind: Service

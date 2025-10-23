@@ -12,7 +12,7 @@ spec:
             group: maas
       credentials:
         authorizationHeader:
-          prefix: APIKEY
+          prefix: Bearer
       metrics: false
       priority: 0
     sso:
@@ -37,7 +37,7 @@ spec:
           selector: auth.identity.metadata.labels.group
           value: maas
   hosts:
-    - nomic-route-nomic.apps.rosa.hcmaii01ue1.a9ro.p3.openshiftapps.com
+    - nomic-route-maas.apps.rosa.hcmaii01ue1.a9ro.p3.openshiftapps.com
   response:
     unauthorized:
       message:
