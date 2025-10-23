@@ -8,6 +8,7 @@ resources:
   - ./mistral-small
   - ./llama-scout
   - ./qwen3-32b
+  - ./embeddings/nomic
   - namespace.yaml
   - clusterrole.yaml
   - role.yaml
