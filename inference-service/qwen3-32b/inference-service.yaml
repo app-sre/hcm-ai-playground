@@ -23,16 +23,18 @@ spec:
       args:
         - '--max-model-len'
         - '128000'
+        - '--quantization'
+        - 'fp8'
       modelFormat:
         name: vLLM
       name: ''
       resources:
         limits:
-          nvidia.com/gpu: '4'
+          nvidia.com/gpu: '2'
         requests:
           cpu: '4'
           memory: 16Gi
-          nvidia.com/gpu: '4'
+          nvidia.com/gpu: '1'
       runtime: gpt-oss-120b-maas
       storage:
         key: models
