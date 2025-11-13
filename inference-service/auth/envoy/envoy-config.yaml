@@ -51,20 +51,11 @@ data:
                 name: local_route
                 virtual_hosts:
                 - name: local_service
-                  domains: ['*']
+                  domains: ['nomic-route-maas.apps.*']
                   routes:
                   - match: { prefix: / }
                     route:
                       cluster: envoy-nomic
-                  rate_limits:
-                  - actions:
-                      - metadata:
-                          metadata_key:
-                            key: "envoy.filters.http.ext_authz"
-                            path:
-                            - key: ext_auth_data
-                            - key: username
-                          descriptor_key: user_id
               http_filters:
               - name: envoy.filters.http.ext_authz
                 typed_config:
