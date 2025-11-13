@@ -76,17 +76,6 @@ data:
                     envoy_grpc:
                       cluster_name: authorino
                     timeout: 1s
-              - name: envoy.filters.http.ratelimit
-                typed_config:
-                  "@type": type.googleapis.com/envoy.extensions.filters.http.ratelimit.v3.RateLimit
-                  domain: "talker-api"
-                  failure_mode_deny: false
-                  timeout: 3s
-                  rate_limit_service:
-                    transport_api_version: V3
-                    grpc_service:
-                      envoy_grpc:
-                        cluster_name: limitador
               - name: envoy.filters.http.router
                 typed_config:
                   "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router

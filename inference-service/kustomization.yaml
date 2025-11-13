@@ -9,6 +9,7 @@ resources:
   - ./llama-scout
   - ./qwen3-32b
   - ./embeddings/nomic
+  - ./auth
   - namespace.yaml
   - clusterrole.yaml
   - role.yaml
