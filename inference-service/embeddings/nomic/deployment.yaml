@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nomic-embed-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nomic-embed
+  template:
+    metadata:
+      labels:
+        app: nomic-embed
+    spec:
+      containers:
+      - name: embeddings
+        image: ghcr.io/huggingface/text-embeddings-inference:cpu-latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: PORT
+          value: "8080"
+        - name: MODEL_ID
+          value: "nomic-ai/nomic-embed-text-v1.5"
+        - name: HUGGINGFACE_HUB_CACHE
+          value: "/data"
+          resources:
+            requests:
+              cpu: "2"
+              memory: "8Gi"
+            limits:
+              cpu: "4"
+              memory: "16Gi"
+        volumeMounts:
+        - name: hf-cache
+          mountPath: /data
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+      volumes:
+      - name: hf-cache
+        persistentVolumeClaim:
+          claimName: hf-cache-pvc
