@@ -44,11 +44,11 @@ spec:
       name: ''
       resources:
         limits:
-          nvidia.com/gpu: '4'
+          nvidia.com/gpu: '2'
         requests:
           cpu: '2'
           memory: 24Gi
-          nvidia.com/gpu: '4'
+          nvidia.com/gpu: '2'
       runtime: llama-scout-maas
       storage:
         key: models
