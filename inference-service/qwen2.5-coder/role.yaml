@@ -1,0 +1,17 @@
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: qwen25-coder-maas-view-role
+  namespace: maas
+  labels:
+    opendatahub.io/dashboard: 'true'
+rules:
+  - verbs:
+      - get
+    apiGroups:
+      - serving.kserve.io
+    resources:
+      - inferenceservices
+    resourceNames:
+      - qwen25-coder-maas
+
