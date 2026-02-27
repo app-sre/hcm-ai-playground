@@ -3,11 +3,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources: 
-  # Disabled for releasing GPU while we working on standalone inference service
-  # - ./mistral-small-dev 
   - ./mistral-small
   - ./llama-scout
-  - ./qwen3-32b
   - namespace.yaml
   - clusterrole.yaml
   - role.yaml
