@@ -15,7 +15,7 @@ resources:
 images:
   - name: SWARMER_IMAGE
     newName: quay.io/jpacker/swarmer
-    newTag: "0.4.0"
+    newTag: "0.4.1"
 
 patches:
   - target:
