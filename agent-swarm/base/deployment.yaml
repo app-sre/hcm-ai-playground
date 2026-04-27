@@ -1,0 +1,60 @@
+# Deployment base — image and env placeholders are set via overlays.
+# Requires a pre-existing Secret "swarmer-secret" with key SWARMER_SECRET_KEY.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swarmer
+  labels:
+    app: swarmer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: swarmer
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: swarmer
+    spec:
+      serviceAccountName: swarmer
+      containers:
+        - name: swarmer
+          image: SWARMER_IMAGE
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: K8S_IN_CLUSTER
+              value: "true"
+            - name: DATABASE_URL
+              value: sqlite+aiosqlite:////data/swarmer.db
+            - name: SWARMER_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: swarmer-secret
+                  key: SWARMER_SECRET_KEY
+            - name: K8S_API_URL
+              value: "https://kubernetes.default.svc"
+          volumeMounts:
+            - name: swarmer-data
+              mountPath: /data
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
+          readinessProbe:
+            httpGet:
+              path: /login
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: swarmer-data
+          persistentVolumeClaim:
+            claimName: swarmer-data

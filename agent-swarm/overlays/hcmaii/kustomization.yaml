@@ -1,0 +1,46 @@
+# hcmaii cluster overlay for agent-swarm (multi-namespace / cluster-admin mode).
+#
+# Pre-requisites (one-time, manual):
+#   1. Create the swarmer-secret in the swarmer namespace:
+#        oc create secret generic swarmer-secret \
+#          --from-literal=SWARMER_SECRET_KEY=$(python3 -c \
+#            "import os,base64; print(base64.urlsafe_b64encode(os.urandom(32)).decode())") \
+#          -n swarmer --dry-run=client -o yaml | oc apply -f -
+#
+#   2. After first sync, patch the OAuthClient redirect URI and set OPENSHIFT_OAUTH_URL:
+#        SWARMER_HOST=$(oc get route swarmer -n swarmer -o jsonpath='{.spec.host}')
+#        oc patch oauthclient swarmer --type=json \
+#          -p "[{\"op\":\"replace\",\"path\":\"/redirectURIs/0\",\"value\":\"https://${SWARMER_HOST}/auth/callback\"}]"
+#        oc set env deployment/swarmer -n swarmer \
+#          OPENSHIFT_OAUTH_URL=https://$(oc get route oauth-openshift -n openshift-authentication -o jsonpath='{.spec.host}')
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+images:
+  - name: SWARMER_IMAGE
+    newName: quay.io/jpacker/swarmer
+    newTag: latest
+
+patches:
+  - target:
+      kind: Deployment
+      name: swarmer
+    patch: |
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: AGENT_IMAGE_OPENCODE
+          value: "quay.io/jpacker/opencode:0.1.1"
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: AGENT_IMAGE_CRUSH
+          value: "ghcr.io/gurnben/crush-container:latest"
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: DEFAULT_AGENT_TOOL
+          value: "opencode"
