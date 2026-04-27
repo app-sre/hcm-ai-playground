@@ -10,3 +10,4 @@ resources:
   - serviceaccount-redhat-ods-operator-clusterrole-and-binding.yaml
   - prometheusrules.clusterrole-and-rolebinding.yaml
   - dedicated-admins-aggregate-cluster.yaml
+  - agent-swarm-clusterrole-and-binding.yaml
