@@ -9,5 +9,3 @@ redirectURIs:
   - https://SWARMER_HOST/auth/callback
   - http://localhost:8080/auth/callback
 grantMethod: auto
-responseTypes:
-  - token
