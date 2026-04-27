@@ -1,0 +1,22 @@
+# agent-swarm cluster-admin base — multi-namespace deployment.
+# Copied from stolostron/agent-swarm kustomize/base/cluster-admin + common.
+# Requires cluster-admin for ClusterRole, ClusterRoleBinding, Namespace,
+# and OAuthClient creation.
+#
+# Pre-requisites (one-time, manual):
+#   1. Secret "swarmer-secret" with key SWARMER_SECRET_KEY in the swarmer namespace.
+#   2. A pre-built swarmer container image (image placeholder set via overlay).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: swarmer
+
+resources:
+  - namespace.yaml
+  - serviceaccount.yaml
+  - rbac.yaml
+  - pvc.yaml
+  - deployment.yaml
+  - service.yaml
+  - route.yaml
+  - oauth-client.yaml

@@ -1,0 +1,13 @@
+# OAuthClient is cluster-scoped (no namespace).
+# Requires cluster-admin to create.
+# SWARMER_HOST must be replaced with the actual Route hostname via overlay.
+apiVersion: oauth.openshift.io/v1
+kind: OAuthClient
+metadata:
+  name: swarmer
+redirectURIs:
+  - https://SWARMER_HOST/auth/callback
+  - http://localhost:8080/auth/callback
+grantMethod: auto
+responseTypes:
+  - token
