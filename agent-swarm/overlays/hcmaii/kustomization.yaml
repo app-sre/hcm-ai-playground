@@ -44,3 +44,11 @@ patches:
         value:
           name: DEFAULT_AGENT_TOOL
           value: "opencode"
+  - target:
+      group: oauth.openshift.io
+      version: v1
+      kind: OAuthClient
+      name: swarmer
+    patch: |
+      - op: remove
+        path: /metadata/namespace
