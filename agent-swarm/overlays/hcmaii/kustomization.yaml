@@ -41,7 +41,7 @@ patches:
         path: /spec/template/spec/containers/0/env/-
         value:
           name: OPENSHIFT_OAUTH_URL
-          value: "https://oauth.apps.rosa.hcmaii01ue1.a9ro.p3.openshiftapps.com"
+          value: "https://oauth.hcmaii01ue1.a9ro.p3.openshiftapps.com:443"
   - target:
       group: oauth.openshift.io
       version: v1
