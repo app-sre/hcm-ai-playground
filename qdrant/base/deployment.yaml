@@ -26,9 +26,14 @@ spec:
               name: http
             - containerPort: 6334
               name: grpc
+          env:
+            - name: QDRANT__STORAGE__STORAGE_PATH
+              value: /data/storage
+            - name: QDRANT__STORAGE__SNAPSHOTS_PATH
+              value: /data/snapshots
           volumeMounts:
             - name: qdrant-data
-              mountPath: /qdrant
+              mountPath: /data
           resources:
             requests:
               memory: "256Mi"
