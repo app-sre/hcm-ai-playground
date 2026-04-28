@@ -28,7 +28,7 @@ spec:
               name: grpc
           volumeMounts:
             - name: qdrant-data
-              mountPath: /qdrant/storage
+              mountPath: /qdrant
           resources:
             requests:
               memory: "256Mi"
