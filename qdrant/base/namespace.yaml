@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: qdrant
+  labels:
+    app.kubernetes.io/name: qdrant
+    argocd.argoproj.io/managed-by: openshift-gitops

@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hcm-ai-qdrant
+  namespace: maas-config
+spec:
+  destination:
+    name: in-cluster
+  project: default
+  source:
+    path: qdrant/overlays/hcmaii
+    repoURL: 'https://github.com/app-sre/hcm-ai-playground'
+    targetRevision: main
+  syncPolicy:
+    automated:
+      selfHeal: true
+      allowEmpty: false
+    prune: false
