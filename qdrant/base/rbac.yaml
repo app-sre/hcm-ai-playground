@@ -1,0 +1,21 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: qdrant-client
+rules:
+  - apiGroups: [""]
+    resources: ["services"]
+    resourceNames: ["qdrant"]
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: qdrant-client
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: qdrant-client
+subjects:
+  - kind: ServiceAccount
+    name: qdrant-client
