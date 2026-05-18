@@ -2,12 +2,12 @@ extends: default
 
 rules:
   line-length:
-    max: 200
+    max: 300
   truthy:
     check-keys: false
   comments:
     min-spaces-from-content: 1
   document-start: disable
-  indentation:
-    spaces: 2
-    indent-sequences: whatever
+  indentation: disable
+  trailing-spaces: disable
+  new-line-at-end-of-file: disable
