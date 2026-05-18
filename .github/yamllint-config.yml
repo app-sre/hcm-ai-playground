@@ -11,3 +11,4 @@ rules:
   indentation: disable
   trailing-spaces: disable
   new-line-at-end-of-file: disable
+  empty-lines: disable
