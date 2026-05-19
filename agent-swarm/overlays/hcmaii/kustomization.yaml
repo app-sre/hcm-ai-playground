@@ -31,7 +31,7 @@ patches:
         path: /spec/template/spec/containers/0/env/-
         value:
           name: AGENT_IMAGE_CRUSH
-          value: "ghcr.io/gurnben/crush-container:latest"
+          value: "ghcr.io/gurnben/crush-container:0.57.0"
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
