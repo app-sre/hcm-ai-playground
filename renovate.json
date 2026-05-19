@@ -1,0 +1,27 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "labels": ["dependencies", "renovate"],
+  "enabledManagers": ["kustomize", "custom.regex"],
+  "kustomize": {
+    "fileMatch": ["(^|/)kustomization\\.ya?ml$"]
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["(^|/)kustomization\\.ya?ml$"],
+      "matchStrings": [
+        "value:\\s*\"(?<depName>(?!https?://)[a-z0-9.-]+/[^\":]+):(?<currentValue>\\d[^\"]*)\""
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "semver"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "All image updates require human review",
+      "matchManagers": ["kustomize", "custom.regex"],
+      "automerge": false
+    }
+  ]
+}
