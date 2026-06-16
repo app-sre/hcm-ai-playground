@@ -2,7 +2,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-resources: 
+resources:
   - multicluster-observabilities-clusterrole-and-binding.yaml
   - nfd-clusterrole-and-binding.yaml
   - nvidia-clusterrole-and-binding.yaml
@@ -11,3 +11,4 @@ resources:
   - prometheusrules.clusterrole-and-rolebinding.yaml
   - dedicated-admins-aggregate-cluster.yaml
   - agent-swarm-clusterrole-and-binding.yaml
+  - openshell-clusterrole-and-binding.yaml
