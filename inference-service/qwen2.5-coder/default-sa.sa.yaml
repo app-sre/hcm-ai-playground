@@ -1,0 +1,6 @@
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: qwen25-coder-maas-sa
+  namespace: maas
+

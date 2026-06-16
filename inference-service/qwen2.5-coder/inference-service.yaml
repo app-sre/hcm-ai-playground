@@ -1,0 +1,50 @@
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  annotations:
+    openshift.io/display-name: qwen25-coder-maas
+    security.opendatahub.io/enable-auth: 'true'
+    serving.knative.openshift.io/enablePassthrough: 'true'
+    serving.kserve.io/deploymentMode: Serverless
+    sidecar.istio.io/inject: 'true'
+    sidecar.istio.io/rewriteAppHTTPProbers: 'true'
+  name: qwen25-coder-maas
+  namespace: maas
+  finalizers:
+    - inferenceservice.finalizers
+    - odh.inferenceservice.finalizers
+  labels:
+    opendatahub.io/dashboard: 'true'
+spec:
+  predictor:
+    maxReplicas: 1
+    minReplicas: 1
+    model:
+      args:
+        - '--max-model-len'
+        - '32768'
+      modelFormat:
+        name: vLLM
+      name: ''
+      resources:
+        limits:
+          nvidia.com/gpu: '1'
+        requests:
+          cpu: '2'
+          memory: 24Gi
+          nvidia.com/gpu: '1'
+      runtime: qwen25-coder-maas
+      storage:
+        key: models
+        path: models-maas/models--qwen--qwen2.5-coder-32B-instruct
+    tolerations:
+      - effect: NoSchedule
+        key: nvidia-gpu-only
+        operator: Exists
+      - effect: NoSchedule
+        key: nvidia.com/gpu
+        operator: Equal
+        value: L40S
+    annotations:
+      serving.knative.dev/progress-deadline: 30m
+
