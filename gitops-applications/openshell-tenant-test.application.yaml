@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hcm-ai-openshell-tenant-test
+  namespace: maas-config
+spec:
+  destination:
+    name: in-cluster
+  project: default
+  source:
+    path: openshell/deployments/tenant-test
+    repoURL: 'https://github.com/JuanmaBM/hcm-ai-playground'
+    targetRevision: feat-openshell-multi-namespace
+  syncPolicy:
+    automated:
+      selfHeal: true
+      allowEmpty: false
+    prune: false

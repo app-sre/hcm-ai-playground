@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openshell-policy-acp
+  namespace: acp
+  labels:
+    app: openshell
+    team: acp
+data:
+  policy.yaml: |
+    version: 1
+
+    # Filesystem access - STATIC (locked at creation)
+    filesystem_policy:
+      include_workdir: true
+      read_only:
+        - /usr
+        - /lib
+        - /lib64
+        - /proc
+        - /dev/urandom
+        - /etc
+        - /bin
+        - /sbin
+      read_write:
+        - /sandbox
+        - /tmp
+        - /dev/null
+        - /dev/pts
+
+    # Landlock LSM enforcement
+    landlock:
+      compatibility: best_effort
+
+    # Process identity - STATIC
+    process:
+      run_as_user: sandbox
+      run_as_group: sandbox
+
+    # Network policies - DYNAMIC (hot-reloadable)
+    network_policies:
+      # GitHub API access for ACP team
+      github_api:
+        name: "GitHub REST API"
+        endpoints:
+          - host: "api.github.com"
+            port: 443
+            protocol: rest
+            enforcement: enforce
+            access: read-write
+            rules:
+              - allow:
+                  method: GET
+                  path: "/repos/**"
+              - allow:
+                  method: POST
+                  path: "/repos/*/issues"
+              - allow:
+                  method: PATCH
+                  path: "/repos/*/issues/*"
+        binaries:
+          - path: /usr/bin/gh
+          - path: /usr/bin/git
+          - path: /usr/local/bin/claude
+
+      # Anthropic API for Claude
+      anthropic_api:
+        name: "Anthropic API"
+        endpoints:
+          - host: "api.anthropic.com"
+            port: 443
+            protocol: rest
+            enforcement: enforce
+            access: full
+        binaries:
+          - path: /usr/local/bin/claude
+
+      # NPM registry - read-only for ACP
+      npm_registry:
+        name: "NPM Registry"
+        endpoints:
+          - host: "registry.npmjs.org"
+            port: 443
+            protocol: rest
+            enforcement: enforce
+            access: read-only
+            rules:
+              - allow:
+                  method: GET
+                  path: "/**"
+        binaries:
+          - path: /usr/bin/npm
+          - path: /usr/bin/node
