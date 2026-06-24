@@ -1,0 +1,15 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: openshell
+  namespace: tiger-team
+  labels:
+    app: openshell
+spec:
+  to:
+    kind: Service
+    name: openshell
+    weight: 100
+  port:
+    targetPort: 8080
+  wildcardPolicy: None

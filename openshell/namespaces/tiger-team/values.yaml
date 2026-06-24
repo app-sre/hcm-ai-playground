@@ -1,0 +1,14 @@
+# Valores Helm para tiger-team
+# Basados en values-common.yaml pero con overrides específicos
+
+pkiInitJob:
+  enabled: false
+
+server:
+  disableTls: true
+
+podSecurityContext:
+  fsGroup: null
+
+securityContext:
+  runAsUser: null

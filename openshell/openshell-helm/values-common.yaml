@@ -1,0 +1,12 @@
+# OpenShift-specific overrides compartidos por todos los namespaces
+pkiInitJob:
+  enabled: false
+
+server:
+  disableTls: true
+
+podSecurityContext:
+  fsGroup: null
+
+securityContext:
+  runAsUser: null

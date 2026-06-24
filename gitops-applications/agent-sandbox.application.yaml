@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: hcm-ai-openshell-tiger-team
+  name: hcm-ai-agent-sandbox
   namespace: maas-config
 spec:
   destination:
     name: in-cluster
   project: default
   source:
-    path: openshell/namespaces/tiger-team
+    path: openshell/agent-sandbox/overlays/default
     repoURL: 'https://github.com/JuanmaBM/hcm-ai-playground'
     targetRevision: feat-openshell-multi-namespace
   syncPolicy:
@@ -16,3 +16,5 @@ spec:
       selfHeal: true
       allowEmpty: false
     prune: false
+    syncOptions:
+      - CreateNamespace=true
