@@ -12,10 +12,20 @@ spec:
       name: openshell-provider-init
     spec:
       restartPolicy: OnFailure
+      volumes:
+        - name: policies
+          configMap:
+            name: openshell-policy-tiger-team
       containers:
         - name: provider-init
           image: quay.io/jbarea/openshell-cli:latest
+          volumeMounts:
+            - name: policies
+              mountPath: /etc/openshell/policies
+              readOnly: true
           env:
+            - name: HOME
+              value: /tmp
             - name: NAMESPACE
               valueFrom:
                 fieldRef:
@@ -26,11 +36,17 @@ spec:
                   name: openshell-providers-tiger-team
                   key: ANTHROPIC_API_KEY
                   optional: true
-            - name: GITHUB_TOKEN
+            - name: GENERIC_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: openshell-providers-tiger-team
-                  key: GITHUB_TOKEN
+                  key: GENERIC_API_KEY
+                  optional: true
+            - name: GENERIC_API_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: openshell-providers-tiger-team
+                  key: GENERIC_API_BASE
                   optional: true
           command:
             - /bin/sh
@@ -58,22 +74,29 @@ spec:
               echo "Gateway is ready!"
 
               # Create Claude provider if ANTHROPIC_API_KEY is set
-              if [ -n "${ANTHROPIC_API_KEY}" ] && [ "${ANTHROPIC_API_KEY}" != "REPLACE_WITH_REAL_KEY" ]; then
+              if [ -n "${ANTHROPIC_API_KEY}" ]; then
                 echo "Creating Claude provider..."
                 openshell provider create --name ${NAMESPACE}-claude --type claude --credential ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY}" || \
                   echo "Provider ${NAMESPACE}-claude already exists or failed to create"
               else
-                echo "Skipping Claude provider (no valid API key)"
+                echo "Skipping Claude provider (no API key)"
               fi
 
-              # Create GitHub provider if GITHUB_TOKEN is set
-              if [ -n "${GITHUB_TOKEN}" ] && [ "${GITHUB_TOKEN}" != "REPLACE_WITH_REAL_TOKEN" ]; then
-                echo "Creating GitHub provider..."
-                openshell provider create --name ${NAMESPACE}-github --type github --credential GITHUB_TOKEN="${GITHUB_TOKEN}" || \
-                  echo "Provider ${NAMESPACE}-github already exists or failed to create"
+              # Create Generic provider if GENERIC_API_KEY is set
+              if [ -n "${GENERIC_API_KEY}" ]; then
+                echo "Creating Generic provider..."
+                openshell provider create --name ${NAMESPACE}-generic --type generic \
+                  --credential API_KEY="${GENERIC_API_KEY}" \
+                  --config BASE_URL="${GENERIC_API_BASE}" || \
+                  echo "Provider ${NAMESPACE}-generic already exists or failed to create"
               else
-                echo "Skipping GitHub provider (no valid token)"
+                echo "Skipping Generic provider (no API key)"
               fi
+
+              # Set global policy for all sandboxes
+              echo "Setting global policy for all sandboxes..."
+              openshell policy set --global --policy /etc/openshell/policies/policy.yaml --yes || \
+                echo "Failed to set global policy (may already be set)"
 
               echo ""
               echo "=== Provider initialization complete! ==="
