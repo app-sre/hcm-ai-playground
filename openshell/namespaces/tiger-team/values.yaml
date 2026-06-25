@@ -6,6 +6,8 @@ pkiInitJob:
 
 server:
   disableTls: true
+  auth:
+    allowUnauthenticatedUsers: true
 
 podSecurityContext:
   fsGroup: null
