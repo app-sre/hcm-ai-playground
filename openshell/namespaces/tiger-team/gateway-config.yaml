@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: openshell-config
+  name: openshell-tiger-team-config
 data:
   gateway.toml: |
     [openshell]
@@ -30,7 +30,7 @@ data:
 
     [openshell.drivers.kubernetes]
     grpc_endpoint                = "http://openshell.tiger-team.svc.cluster.local:8080"
-    service_account_name         = "openshell-sandbox"
+    service_account_name         = "openshell-tiger-team-sandbox"
     supervisor_sideload_method   = "init-container"
     sa_token_ttl_secs            = 3600
     app_armor_profile            = "Unconfined"
