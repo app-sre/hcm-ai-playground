@@ -6,6 +6,7 @@ namespace: tiger-team
 resources:
   - namespace.yaml
   - helm-generated.yaml
+  - scc-binding.yaml
   - route.yaml
   - policies
   - secrets
