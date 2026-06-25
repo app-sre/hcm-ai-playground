@@ -10,7 +10,7 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: openshell-sandbox-ssh
+  name: openshell-tiger-team-sandbox-ssh
   namespace: tiger-team
   labels:
     helm.sh/chart: helm-chart-0.0.63
@@ -43,7 +43,7 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: openshell
+  name: openshell-tiger-team
   labels:
     helm.sh/chart: helm-chart-0.0.63
     app.kubernetes.io/name: openshell
@@ -55,7 +55,7 @@ metadata:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: openshell-sandbox
+  name: openshell-tiger-team-sandbox
   namespace: tiger-team
   labels:
     helm.sh/chart: helm-chart-0.0.63
@@ -71,7 +71,7 @@ metadata:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: openshell-config
+  name: openshell-tiger-team-config
   labels:
     helm.sh/chart: helm-chart-0.0.63
     app.kubernetes.io/name: openshell
@@ -101,12 +101,12 @@ data:
     signing_key_path = "/etc/openshell-jwt/signing.pem"
     public_key_path  = "/etc/openshell-jwt/public.pem"
     kid_path         = "/etc/openshell-jwt/kid"
-    gateway_id       = "openshell"
+    gateway_id       = "openshell-tiger-team"
     ttl_secs         = 3600
 
     [openshell.drivers.kubernetes]
-    grpc_endpoint                = "http://openshell.tiger-team.svc.cluster.local:8080"
-    service_account_name         = "openshell-sandbox"
+    grpc_endpoint                = "http://openshell-tiger-team.tiger-team.svc.cluster.local:8080"
+    service_account_name         = "openshell-tiger-team-sandbox"
     supervisor_sideload_method   = "init-container"
     sa_token_ttl_secs            = 3600
     app_armor_profile            = "Unconfined"
@@ -118,7 +118,7 @@ data:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: openshell-node-reader
+  name: openshell-tiger-team-node-reader
   labels:
     helm.sh/chart: helm-chart-0.0.63
     app.kubernetes.io/name: openshell
@@ -150,7 +150,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: openshell-node-reader
+  name: openshell-tiger-team-node-reader
   labels:
     helm.sh/chart: helm-chart-0.0.63
     app.kubernetes.io/name: openshell
@@ -160,10 +160,10 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: openshell-node-reader
+  name: openshell-tiger-team-node-reader
 subjects:
   - kind: ServiceAccount
-    name: openshell
+    name: openshell-tiger-team
     namespace: tiger-team
 ---
 # Source: helm-chart/templates/role.yaml
@@ -173,7 +173,7 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: openshell-sandbox
+  name: openshell-tiger-team-sandbox
   namespace: tiger-team
   labels:
     helm.sh/chart: helm-chart-0.0.63
@@ -223,7 +223,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: openshell-sandbox
+  name: openshell-tiger-team-sandbox
   namespace: tiger-team
   labels:
     helm.sh/chart: helm-chart-0.0.63
@@ -234,10 +234,10 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: openshell-sandbox
+  name: openshell-tiger-team-sandbox
 subjects:
   - kind: ServiceAccount
-    name: openshell
+    name: openshell-tiger-team
     namespace: tiger-team
 ---
 # Source: helm-chart/templates/service.yaml
@@ -247,7 +247,7 @@ subjects:
 apiVersion: v1
 kind: Service
 metadata:
-  name: openshell
+  name: openshell-tiger-team
   labels:
     helm.sh/chart: helm-chart-0.0.63
     app.kubernetes.io/name: openshell
@@ -276,7 +276,7 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: openshell
+  name: openshell-tiger-team
   labels:
     helm.sh/chart: helm-chart-0.0.63
     app.kubernetes.io/name: openshell
@@ -284,7 +284,7 @@ metadata:
     app.kubernetes.io/version: "0.0.63"
     app.kubernetes.io/managed-by: Helm
 spec:
-  serviceName: openshell
+  serviceName: openshell-tiger-team
   replicas: 1
   selector:
     matchLabels:
@@ -297,7 +297,7 @@ spec:
         # gateway only reads /etc/openshell/gateway.toml at startup, so without
         # this annotation a `helm upgrade` that only mutates the ConfigMap would
         # leave pods running with stale config.
-        checksum/gateway-config: dff04bc1575e744ded33832be30dcf5f3ab6ee44f69b87f5161d7439259cecf3
+        checksum/gateway-config: 433b52a691854c52eaa14a1f591a8bb4f5cf46c46c44187159efa9db3ad99d11
       labels:
         helm.sh/chart: helm-chart-0.0.63
         app.kubernetes.io/name: openshell
@@ -306,7 +306,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
     spec:
       terminationGracePeriodSeconds: 5
-      serviceAccountName: openshell
+      serviceAccountName: openshell-tiger-team
       securityContext:
         {}
       containers:
@@ -376,10 +376,10 @@ spec:
       volumes:
         - name: gateway-config
           configMap:
-            name: openshell-config
+            name: openshell-tiger-team-config
         - name: sandbox-jwt
           secret:
-            secretName: openshell-jwt-keys
+            secretName: openshell-tiger-team-jwt-keys
             defaultMode: 256
   volumeClaimTemplates:
     - metadata:
