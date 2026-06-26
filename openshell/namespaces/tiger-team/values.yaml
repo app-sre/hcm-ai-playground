@@ -1,0 +1,19 @@
+# Valores Helm para tiger-team
+# Basados en values-common.yaml pero con overrides específicos
+
+# Override name to avoid ClusterRole/ClusterRoleBinding conflicts
+fullnameOverride: "openshell-tiger-team"
+
+pkiInitJob:
+  enabled: false
+
+server:
+  disableTls: true
+  auth:
+    allowUnauthenticatedUsers: true
+
+podSecurityContext:
+  fsGroup: null
+
+securityContext:
+  runAsUser: null

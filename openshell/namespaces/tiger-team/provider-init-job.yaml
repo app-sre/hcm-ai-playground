@@ -1,0 +1,115 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: openshell-provider-init
+  namespace: tiger-team
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      name: openshell-provider-init
+    spec:
+      restartPolicy: OnFailure
+      volumes:
+        - name: policies
+          configMap:
+            name: openshell-policy-tiger-team
+      containers:
+        - name: provider-init
+          image: quay.io/jbarea/openshell-cli:latest
+          volumeMounts:
+            - name: policies
+              mountPath: /etc/openshell/policies
+              readOnly: true
+          env:
+            - name: HOME
+              value: /tmp
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: ANTHROPIC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: openshell-providers-tiger-team
+                  key: ANTHROPIC_API_KEY
+                  optional: true
+            - name: GENERIC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: openshell-providers-tiger-team
+                  key: GENERIC_API_KEY
+                  optional: true
+            - name: GENERIC_API_BASE
+              valueFrom:
+                secretKeyRef:
+                  name: openshell-providers-tiger-team
+                  key: GENERIC_API_BASE
+                  optional: true
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+
+              echo "Waiting for OpenShell gateway to be ready..."
+
+              GATEWAY="http://openshell.${NAMESPACE}.svc.cluster.local:8080"
+
+              # Wait for gateway to be available (max 5 minutes)
+              TIMEOUT=300
+              ELAPSED=0
+              until openshell gateway add ${GATEWAY} --name ${NAMESPACE} 2>&1 | grep -qE "(added|already exists)"; do
+                if [ $ELAPSED -ge $TIMEOUT ]; then
+                  echo "Timeout waiting for gateway after ${TIMEOUT}s"
+                  exit 1
+                fi
+                echo "Gateway not ready yet, waiting... (${ELAPSED}s elapsed)"
+                sleep 5
+                ELAPSED=$((ELAPSED + 5))
+              done
+
+              echo "Gateway is ready!"
+
+              # Create Claude provider if ANTHROPIC_API_KEY is set
+              if [ -n "${ANTHROPIC_API_KEY}" ]; then
+                echo "Creating Claude provider..."
+                openshell provider create --name ${NAMESPACE}-claude --type claude --credential ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY}" || \
+                  echo "Provider ${NAMESPACE}-claude already exists or failed to create"
+              else
+                echo "Skipping Claude provider (no API key)"
+              fi
+
+              # Create Generic provider if GENERIC_API_KEY is set
+              if [ -n "${GENERIC_API_KEY}" ]; then
+                echo "Creating Generic provider..."
+                openshell provider create --name ${NAMESPACE}-generic --type generic \
+                  --credential API_KEY="${GENERIC_API_KEY}" \
+                  --config BASE_URL="${GENERIC_API_BASE}" || \
+                  echo "Provider ${NAMESPACE}-generic already exists or failed to create"
+              else
+                echo "Skipping Generic provider (no API key)"
+              fi
+
+              # Set global policy for all sandboxes
+              echo "Setting global policy for all sandboxes..."
+              openshell policy set --global --policy /etc/openshell/policies/policy.yaml --yes || \
+                echo "Failed to set global policy (may already be set)"
+
+              echo ""
+              echo "=== Provider initialization complete! ==="
+              echo ""
+
+              # List created providers
+              echo "Listing all providers:"
+              openshell provider list || echo "Failed to list providers"
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
