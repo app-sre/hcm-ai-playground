@@ -13,3 +13,4 @@ resources:
   - service.yaml
   - route.yaml
   - user-jkyros-admin.yaml
+  - auth-delegator.yaml
