@@ -12,3 +12,4 @@ resources:
   - dedicated-admins-aggregate-cluster.yaml
   - agent-swarm-clusterrole-and-binding.yaml
   - openshell-clusterrole-and-binding.yaml
+  - qdrant-clusterrole-and-binding.yaml
