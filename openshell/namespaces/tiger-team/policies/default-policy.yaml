@@ -1,0 +1,104 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openshell-policy-tiger-team
+  namespace: tiger-team
+  labels:
+    app: openshell
+    team: tiger-team
+data:
+  policy.yaml: |
+    version: 1
+
+    # Filesystem access - STATIC (locked at creation)
+    filesystem_policy:
+      include_workdir: true
+      read_only:
+        - /usr
+        - /lib
+        - /lib64
+        - /proc
+        - /dev/urandom
+        - /etc
+        - /bin
+        - /sbin
+      read_write:
+        - /sandbox
+        - /tmp
+        - /dev/null
+        - /dev/pts
+
+    # Landlock LSM enforcement
+    landlock:
+      compatibility: best_effort
+
+    # Process identity - STATIC
+    process:
+      run_as_user: sandbox
+      run_as_group: sandbox
+
+    # Network policies - DYNAMIC (hot-reloadable)
+    # TIGER-TEAM: Full access for security research
+    network_policies:
+      # GitHub API - full access
+      github_api:
+        name: "GitHub REST API"
+        endpoints:
+          - host: "api.github.com"
+            port: 443
+            protocol: rest
+            enforcement: enforce
+            access: full
+        binaries:
+          - path: /usr/bin/gh
+          - path: /usr/bin/git
+          - path: /usr/local/bin/claude
+
+      # GitLab API
+      gitlab_api:
+        name: "GitLab REST API"
+        endpoints:
+          - host: "gitlab.com"
+            port: 443
+            protocol: rest
+            enforcement: enforce
+            access: full
+        binaries:
+          - path: /usr/bin/glab
+          - path: /usr/local/bin/claude
+
+      # Anthropic API
+      anthropic_api:
+        name: "Anthropic API"
+        endpoints:
+          - host: "api.anthropic.com"
+            port: 443
+            protocol: rest
+            enforcement: enforce
+            access: full
+        binaries:
+          - path: /usr/local/bin/claude
+
+      # OpenAI API for comparisons
+      openai_api:
+        name: "OpenAI API"
+        endpoints:
+          - host: "api.openai.com"
+            port: 443
+            protocol: rest
+            enforcement: enforce
+            access: full
+        binaries:
+          - path: /usr/local/bin/opencode
+
+      # Allow internal services
+      internal_apis:
+        name: "Internal Services"
+        endpoints:
+          - host: "*.cluster.local"
+            port: 443
+            protocol: rest
+            enforcement: enforce
+            access: full
+        binaries:
+          - path: /usr/local/bin/claude

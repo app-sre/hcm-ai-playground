@@ -2,9 +2,7 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: openshell
-  namespace: openshell
-  annotations:
-    haproxy.router.openshift.io/timeout: 5m
+  namespace: tiger-team
   labels:
     app: openshell
 spec:

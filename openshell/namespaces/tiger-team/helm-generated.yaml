@@ -10,8 +10,8 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: openshell-sandbox-ssh
-  namespace: openshell
+  name: openshell-tiger-team-sandbox-ssh
+  namespace: tiger-team
   labels:
     helm.sh/chart: helm-chart-0.0.63
     app.kubernetes.io/name: openshell
@@ -28,7 +28,7 @@ spec:
     - from:
         - namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: openshell
+              kubernetes.io/metadata.name: tiger-team
           podSelector:
             matchLabels:
               app.kubernetes.io/name: openshell
@@ -43,7 +43,7 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: openshell
+  name: openshell-tiger-team
   labels:
     helm.sh/chart: helm-chart-0.0.63
     app.kubernetes.io/name: openshell
@@ -55,8 +55,8 @@ metadata:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: openshell-sandbox
-  namespace: openshell
+  name: openshell-tiger-team-sandbox
+  namespace: tiger-team
   labels:
     helm.sh/chart: helm-chart-0.0.63
     app.kubernetes.io/name: openshell
@@ -71,7 +71,7 @@ metadata:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: openshell-config
+  name: openshell-tiger-team-config
   labels:
     helm.sh/chart: helm-chart-0.0.63
     app.kubernetes.io/name: openshell
@@ -88,7 +88,7 @@ data:
     health_bind_address   = "0.0.0.0:8081"
     metrics_bind_address  = "0.0.0.0:9090"
     log_level             = "info"
-    sandbox_namespace     = "openshell"
+    sandbox_namespace     = "tiger-team"
     default_image         = "ghcr.io/nvidia/openshell-community/sandboxes/base:latest"
     supervisor_image      = "ghcr.io/nvidia/openshell/supervisor:0.0.63"
     disable_tls            = true
@@ -101,12 +101,12 @@ data:
     signing_key_path = "/etc/openshell-jwt/signing.pem"
     public_key_path  = "/etc/openshell-jwt/public.pem"
     kid_path         = "/etc/openshell-jwt/kid"
-    gateway_id       = "openshell"
+    gateway_id       = "openshell-tiger-team"
     ttl_secs         = 3600
 
     [openshell.drivers.kubernetes]
-    grpc_endpoint                = "http://openshell.openshell.svc.cluster.local:8080"
-    service_account_name         = "openshell-sandbox"
+    grpc_endpoint                = "http://openshell-tiger-team.tiger-team.svc.cluster.local:8080"
+    service_account_name         = "openshell-tiger-team-sandbox"
     supervisor_sideload_method   = "init-container"
     sa_token_ttl_secs            = 3600
     app_armor_profile            = "Unconfined"
@@ -118,7 +118,7 @@ data:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: openshell-node-reader
+  name: openshell-tiger-team-node-reader
   labels:
     helm.sh/chart: helm-chart-0.0.63
     app.kubernetes.io/name: openshell
@@ -150,7 +150,7 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: openshell-node-reader
+  name: openshell-tiger-team-node-reader
   labels:
     helm.sh/chart: helm-chart-0.0.63
     app.kubernetes.io/name: openshell
@@ -160,11 +160,11 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: openshell-node-reader
+  name: openshell-tiger-team-node-reader
 subjects:
   - kind: ServiceAccount
-    name: openshell
-    namespace: openshell
+    name: openshell-tiger-team
+    namespace: tiger-team
 ---
 # Source: helm-chart/templates/role.yaml
 # SPDX-FileCopyrightText: Copyright (c) 2025-2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
@@ -173,8 +173,8 @@ subjects:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: openshell-sandbox
-  namespace: openshell
+  name: openshell-tiger-team-sandbox
+  namespace: tiger-team
   labels:
     helm.sh/chart: helm-chart-0.0.63
     app.kubernetes.io/name: openshell
@@ -223,8 +223,8 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: openshell-sandbox
-  namespace: openshell
+  name: openshell-tiger-team-sandbox
+  namespace: tiger-team
   labels:
     helm.sh/chart: helm-chart-0.0.63
     app.kubernetes.io/name: openshell
@@ -234,11 +234,11 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: openshell-sandbox
+  name: openshell-tiger-team-sandbox
 subjects:
   - kind: ServiceAccount
-    name: openshell
-    namespace: openshell
+    name: openshell-tiger-team
+    namespace: tiger-team
 ---
 # Source: helm-chart/templates/service.yaml
 # SPDX-FileCopyrightText: Copyright (c) 2025-2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
@@ -247,7 +247,7 @@ subjects:
 apiVersion: v1
 kind: Service
 metadata:
-  name: openshell
+  name: openshell-tiger-team
   labels:
     helm.sh/chart: helm-chart-0.0.63
     app.kubernetes.io/name: openshell
@@ -276,9 +276,7 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: openshell
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"
+  name: openshell-tiger-team
   labels:
     helm.sh/chart: helm-chart-0.0.63
     app.kubernetes.io/name: openshell
@@ -286,7 +284,7 @@ metadata:
     app.kubernetes.io/version: "0.0.63"
     app.kubernetes.io/managed-by: Helm
 spec:
-  serviceName: openshell
+  serviceName: openshell-tiger-team
   replicas: 1
   selector:
     matchLabels:
@@ -299,7 +297,7 @@ spec:
         # gateway only reads /etc/openshell/gateway.toml at startup, so without
         # this annotation a `helm upgrade` that only mutates the ConfigMap would
         # leave pods running with stale config.
-        checksum/gateway-config: 572bd1b25f78dc63d9ae9e2a6d6e02a41fb7d799d533841f6d003c28390f85c5
+        checksum/gateway-config: 433b52a691854c52eaa14a1f591a8bb4f5cf46c46c44187159efa9db3ad99d11
       labels:
         helm.sh/chart: helm-chart-0.0.63
         app.kubernetes.io/name: openshell
@@ -308,7 +306,7 @@ spec:
         app.kubernetes.io/managed-by: Helm
     spec:
       terminationGracePeriodSeconds: 5
-      serviceAccountName: openshell
+      serviceAccountName: openshell-tiger-team
       securityContext:
         {}
       containers:
@@ -378,10 +376,10 @@ spec:
       volumes:
         - name: gateway-config
           configMap:
-            name: openshell-config
+            name: openshell-tiger-team-config
         - name: sandbox-jwt
           secret:
-            secretName: openshell-jwt-keys
+            secretName: openshell-tiger-team-jwt-keys
             defaultMode: 256
   volumeClaimTemplates:
     - metadata:
